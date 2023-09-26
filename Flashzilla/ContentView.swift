@@ -7,8 +7,8 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-                .onTapGesture(count: 2) {
-                    print("Double-tap.")
+                .onLongPressGesture {
+                    print("Long press.")
                 }
             Text("Hello, world!")
         }
