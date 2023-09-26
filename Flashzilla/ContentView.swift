@@ -1,6 +1,14 @@
 
 import SwiftUI
 
+func withOptionalAnimation<Result>(_ animation: Animation? = .default, _ body: () throws -> Result) rethrows -> Result {
+    if UIAccessibility.isReduceMotionEnabled {
+        return try body()
+    } else {
+        return try withAnimation(animation, body)
+    }
+}
+
 struct ContentView: View {
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @State private var scale = 1.0
@@ -9,12 +17,8 @@ struct ContentView: View {
         Text("Hello, world")
             .scaleEffect(scale)
             .onTapGesture {
-                if reduceMotion {
+                withOptionalAnimation {
                     scale *= 1.2
-                } else {
-                    withAnimation {
-                        scale *= 1.2
-                    }
                 }
             }
     }
