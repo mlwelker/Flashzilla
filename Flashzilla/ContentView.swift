@@ -2,19 +2,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var currentAmount = 0.0
+    @State private var finalAmount = 1.0
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-                .onLongPressGesture(minimumDuration: 0.5) {
-                    print("Long press.")
-                } onPressingChanged: { inProgress in
-                    print("In progress: \(inProgress)")
-                }
-            Text("Hello, world!")
-        }
-        .padding()
+        Text("Hello, world!")
+            .scaleEffect(finalAmount + currentAmount)
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { amount in
+                        currentAmount = amount - 1
+                    }
+                    .onEnded { _ in
+                        finalAmount += currentAmount
+                        currentAmount = 0.0
+                    }
+            )
     }
 }
 
