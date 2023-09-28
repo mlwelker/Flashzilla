@@ -8,6 +8,7 @@ struct CardView: View {
     @State private var feedback = UINotificationFeedbackGenerator()
     
     @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
+    @Environment(\.accessibilityVoiceOverEnabled) var voiceOverEnabled
     @State private var isShowingAnswer = false
     @State private var offset = CGSize.zero
     
@@ -28,14 +29,20 @@ struct CardView: View {
                 .shadow(radius: 8)
             
             VStack {
-                Text(card.prompt)
-                    .font(.title)
-                    .foregroundStyle(.black)
-                
-                if isShowingAnswer {
-                    Text(card.answer)
-                        .font(.title2)
-                        .foregroundStyle(.gray)
+                if voiceOverEnabled {
+                    Text(isShowingAnswer ? card.answer : card.prompt)
+                        .font(.title)
+                        .foregroundStyle(.black)
+                } else {
+                    Text(card.prompt)
+                        .font(.title)
+                        .foregroundStyle(.black)
+                    
+                    if isShowingAnswer {
+                        Text(card.answer)
+                            .font(.title2)
+                            .foregroundStyle(.gray)
+                    }
                 }
             }
             .padding()
@@ -45,6 +52,7 @@ struct CardView: View {
         .rotationEffect(.degrees(Double(offset.width / 5)))
         .offset(x: offset.width * 5, y: 0)
         .opacity(2 - Double(abs(offset.width / 50)))
+        .accessibilityAddTraits(.isButton)
         .gesture(
             DragGesture()
                 .onChanged { dragValue in
@@ -66,6 +74,7 @@ struct CardView: View {
         .onTapGesture {
             isShowingAnswer.toggle()
         }
+        .animation(.spring(), value: offset)
     }
 }
 
