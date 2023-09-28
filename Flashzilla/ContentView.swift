@@ -19,6 +19,8 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     @State private var isActive = true
     
+    @State private var showingEditScreen = false
+    
     var body: some View {
         ZStack {
             Image("background")
@@ -56,6 +58,26 @@ struct ContentView: View {
                         .clipShape(.capsule)
                 }
             }
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        showingEditScreen = true
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .padding()
+                            .background(.black.opacity(0.7))
+                            .clipShape(.circle)
+                    }
+                }
+                
+                Spacer()
+            }
+            .foregroundColor(.white)
+            .font(.title)
+            .padding()
             
             if differentiateWithoutColor || voiceOverEnabled {
                 VStack {
