@@ -15,12 +15,13 @@ extension Shape {
 
 struct CardView: View {
     let card: Card
-    var removal: (() -> Void)? = nil
+    var removal: ((Bool) -> Void)? = nil
     
     @State private var feedback = UINotificationFeedbackGenerator()
     
     @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
     @Environment(\.accessibilityVoiceOverEnabled) var voiceOverEnabled
+    
     @State private var isShowingAnswer = false
     @State private var offset = CGSize.zero
     
@@ -73,11 +74,13 @@ struct CardView: View {
                 }
                 .onEnded { _ in
                     if abs(offset.width) > 100 {
-                        if offset.width < 0 {
+                        if offset.width > 0 {
+                            removal?(false)
+                        } else {
                             feedback.notificationOccurred(.error)
+                            removal?(true)
+                            offset = .zero
                         }
-                        
-                        removal?()
                     } else {
                         offset = .zero
                     }
